@@ -14,12 +14,12 @@ public class RacunServiceImp implements RacunService{
     RacunRepository racunRepository;    
 
     @Override
-    public List<Racun> getAllRacun() {
+    public List<Racun> findAll() {
         return racunRepository.findAll();
     }
 
     @Override
-    public Racun getRacunById(Long id) {
+    public Racun findRacunById(Long id) {
         return racunRepository.findById(id).get();
     }
 
