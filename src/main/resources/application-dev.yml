@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ABC_db
+    username: ABC
+    password: ABC
+
+  sql:
+    init:
+      mode: always
