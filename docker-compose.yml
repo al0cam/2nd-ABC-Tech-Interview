@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=ABC
+      - POSTGRES_PASSWORD=ABC
+      - POSTGRES_DB=ABC_db
