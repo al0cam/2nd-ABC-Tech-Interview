@@ -8,6 +8,10 @@ create table if not exists racun (
     datum_zatvaranja date
 );
 
+-- For some reason the @GeneratedValue annotation doesn't work;
+-- I have to manually create the sequence and set the value of the primary key
+-- all rights were granted to the user so there shouln't be any issue with that and 
+-- the annotations were used correctly which leaves the bug to be random or a lack of understanding
 create sequence if not exists racun_seq start 4 increment 1;
 
 -- For some reason the following inserts don't work in the dockerized psql; on the regular psql they work fine
