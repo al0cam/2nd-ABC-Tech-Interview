@@ -1,44 +1,33 @@
 package com.interview.app.WebApp.Models;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.SequenceGenerator;
+import lombok.Data;
 
+@Data
 @Entity
 public class Racun {
     @Id
-    @Getter
-    @Setter
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "racun_seq")
+    @SequenceGenerator(name = "racun_seq", sequenceName = "racun_seq", allocationSize = 1)
     private Long racun_id;
-
-    @Getter
-    @Setter
     private String iban;
-
-    @Getter
-    @Setter
     private Integer tip_racuna;
-
-    @Getter
-    @Setter
     private String valuta;
-    
-    @Getter
-    @Setter
     private Integer klijent_id;
-    
-    @Getter
-    @Setter
-    private Date datum_otvaranja;
-
-    @Getter
-    @Setter
-    private Date datum_zatvaranja;
-
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDate datum_otvaranja;
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDate datum_zatvaranja;
 }
