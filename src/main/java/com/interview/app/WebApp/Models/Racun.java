@@ -17,8 +17,8 @@ import lombok.Data;
 @Entity
 public class Racun {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "racun_seq")
-    @SequenceGenerator(name = "racun_seq", sequenceName = "racun_seq", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="racunSeq")
+    @SequenceGenerator(name="racunSeq", sequenceName = "racun_seq", allocationSize=1)
     private Long racun_id;
     private String iban;
     private Integer tip_racuna;
