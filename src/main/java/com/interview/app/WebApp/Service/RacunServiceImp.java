@@ -1,5 +1,6 @@
 package com.interview.app.WebApp.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class RacunServiceImp implements RacunService{
     @Override
     public void deleteRacun(Long id) {
         racunRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Racun> findByDate(LocalDate date) {
+        // return racunRepository.findByDatumZatvaranjaGreaterThanEqualOrDatumZatvaranjaIsNull(date);
+        return racunRepository.findByDateBetween(date);
     }
     
 }
