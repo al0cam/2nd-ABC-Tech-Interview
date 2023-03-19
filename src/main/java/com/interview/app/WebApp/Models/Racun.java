@@ -19,15 +19,15 @@ public class Racun {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO, generator="racunSeq")
     @SequenceGenerator(name="racunSeq", sequenceName = "racun_seq", allocationSize=1)
-    private Long racun_id;
+    private Long racunId;
     private String iban;
-    private Integer tip_racuna;
+    private Integer tipRacuna;
     private String valuta;
-    private Integer klijent_id;
+    private Integer klijentId;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     @JsonFormat(pattern = "dd.MM.yyyy")
-    private LocalDate datum_otvaranja;
+    private LocalDate datumOtvaranja;
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     @JsonFormat(pattern = "dd.MM.yyyy")
-    private LocalDate datum_zatvaranja;
+    private LocalDate datumZatvaranja;
 }
