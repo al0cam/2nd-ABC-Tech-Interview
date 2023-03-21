@@ -1,13 +1,70 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Page Title</title>
-    </head>
+<head>
+    <title>Page Title</title>
+
+    <script>
+        let date = "[[${date}]]";
+
+        function deleteRacun(button) {
+            console.log("DELTE");
+            var racunId = button.getAttribute("data-racun-id");
+            console.log(racunId);
+            fetch("/racun/delete/" + racunId, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error deleting Racun");
+                }
+                // Remove the deleted item from the list
+                button.closest("tr").remove();
+            })
+                .catch(error => {
+                    console.log("Error deleting Racun: " + error.message);
+            });
+        }
+        
+        function addRacun() {
+            const racun = {
+                iban: document.getElementById("iban").value,
+                tipRacuna: document.getElementById("tipRacuna").value,
+                valuta: document.getElementById("valuta").value,
+                klijentId: document.getElementById("klijentId").value,
+                datumOtvaranja: document.getElementById("datumOtvaranja").value,
+                datumZatvaranja: document.getElementById("datumZatvaranja").value
+            };
+            console.log(racun.datumOtvaranja);
+            console.log(racun);
+
+            fetch('/racun/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(racun)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clone the row fragment
+                console.log(object);
+                const rowTemplate = document.createElement('template');
+                rowTemplate.innerHTML = `<th:block th:insert="fragments :: racunRow(racun=${data})"></th:block>`;
+                const row = rowTemplate.content.firstChild;
+
+                // Append the new row to the table if it satisfies the query
+                if (data.datumZatvaranja == null && data.datumOtvaranja <= date || data.datumOtvaranja <= date && data.datumZatvaranja >= date) {
+                    document.querySelector('tbody').appendChild(row);
+                }
+            })
+            .catch(error => console.error(error));
+        }
+    </script>
+</head>
 <body>
 
-    <a th:href="@{/greeting}">
-        <button>greeting</button>
-    </a>
+    
 
     <h1>Racuni</h1>
     <form th:action="@{/}" method="post">
@@ -15,6 +72,37 @@
         <input type="date" id="date" name="date" th:value="${date}">
         <button type="submit">Prikaži</button>
     </form>
+    <br>
+
+    <form th:onsubmit="addRacun(); return false;" method="post" id="newRacunForm">
+        <label for="iban">IBAN:</label>
+        <input type="text" id="iban"required pattern="[A-Za-z]{2}[0-9]+" />
+        <br>
+    
+        <label for="tipRacuna">Tip racuna:</label>
+        <input type="text" id="tipRacuna"/>
+        <br>
+    
+        <label for="valuta">Valuta:</label>
+        <input type="text" id="valuta" required pattern="[A-Za-z]{3}" />
+        <br>
+    
+        <label for="klijentId">Klijent ID:</label>
+        <input type="text" id="klijentId"/>
+        <br>
+    
+        <label for="datumOtvaranja">Datum otvaranja:</label>
+        <input type="date" id="datumOtvaranja" required />
+        <br>
+    
+        <label for="datumZatvaranja">Datum zatvaranja:</label>
+        <input type="date" id="datumZatvaranja"/>
+        <br>
+    
+        <button type="submit">Create</button>
+    </form>
+      <br>
+
     <table>
         <thead>
             <tr>
@@ -22,29 +110,20 @@
                 <tr>IBAN</tr>
                 <tr>Tip Racuna</tr>
                 <tr>Valuta</tr>
-                <tr>Klijent Id</tr>
+                <tr>Klijent Id</tr> 
                 <tr>Datum otvaranja</tr>
                 <tr>Datum zatvaranja</tr>
+                <tr>Actions</tr>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="racun : ${racuni}">
-                <td th:text="${racun.racunId}"></td>
-                <td th:text="${racun.iban}"></td>
-                <td th:text="${racun.tipRacuna}"></td>
-                <td th:text="${racun.valuta}"></td>
-                <td th:text="${racun.klijentId}"></td>
-                <td th:text="${racun.datumOtvaranja}"></td>
-                <td th:if="${racun.datumZatvaranja} != null" th:text="${racun.datumZatvaranja}"></td>
-                <td th:if="${racun.datumZatvaranja} == null" th:text="zauvijek"></td>
-            </tr>       
+            <th:block th:each="racun : ${racuni}">
+                <th:block th:insert="~{fragments :: racunRow(racun=${racun})}">
+                </th:block>
+            </th:block>
         </tbody>
 
     </table>    
 
 </body>
 </html> 
-
-<script>
-    console.log(date);
-</script>
