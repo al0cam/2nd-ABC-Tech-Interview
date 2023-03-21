@@ -3,6 +3,7 @@ package com.interview.app.WebApp.Models;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -24,10 +25,7 @@ public class Racun {
     private Integer tipRacuna;
     private String valuta;
     private Integer klijentId;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate datumOtvaranja;
-    @DateTimeFormat(pattern = "dd.MM.yyyy")
-    @JsonFormat(pattern = "dd.MM.yyyy")
+    @Nullable
     private LocalDate datumZatvaranja;
 }
