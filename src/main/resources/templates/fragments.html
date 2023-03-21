@@ -1,0 +1,18 @@
+<tr th:fragment="racunRow">
+    <td contenteditable="true" th:text="${racun.racunId}"></td>
+    <td contenteditable="true" th:text="${racun.iban}"></td>
+    <td contenteditable="true" th:text="${racun.tipRacuna}"></td>
+    <td contenteditable="true" th:text="${racun.valuta}"></td>
+    <td contenteditable="true" th:text="${racun.klijentId}"></td>
+    <td contenteditable="true" th:text="${racun.datumOtvaranja}"></td>
+    <td contenteditable="true" th:if="${racun.datumZatvaranja} != null" th:text="${racun.datumZatvaranja}"></td>
+    <td contenteditable="true" th:if="${racun.datumZatvaranja} == null" th:text="zauvijek"></td>
+    <td>
+        <button id="save[[${racuni}]]">Save</button>
+
+        <form th:action="@{/racun/delete/{id}(id=${racun.racunId})}" th:method="delete">
+            <input type="hidden" name="date" th:value="${date}" />
+            <button type="submit">Delete</button>
+        </form>
+    </td>
+</tr>
