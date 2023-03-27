@@ -1,4 +1,4 @@
-<tr th:fragment="racunRow">
+<tr th:fragment="racunRow" th:id="${racun.racunId}">
     <td contenteditable="true" th:text="${racun.racunId}"></td>
     <td contenteditable="true" th:text="${racun.iban}"></td>
     <td contenteditable="true" th:text="${racun.tipRacuna}"></td>
@@ -7,12 +7,12 @@
     <td contenteditable="true" th:text="${racun.datumOtvaranja}"></td>
     <td contenteditable="true" th:if="${racun.datumZatvaranja} != null" th:text="${racun.datumZatvaranja}"></td>
     <td contenteditable="true" th:if="${racun.datumZatvaranja} == null" th:text="zauvijek"></td>
-    <td>
-        <button id="save[[${racuni}]]">Save</button>
+    <td class="d-flex gap-2">
+        <button class="btn btn-secondary" th:onclick="updateRacun(/*[[${racun.racunId}]]*/)" >Update</button>
 
-        <form th:action="@{/racun/delete/{id}(id=${racun.racunId})}" th:method="delete">
+        <form th:action="@{/racun/delete/{id}(id=${racun.racunId})}" th:method="POST">
             <input type="hidden" name="date" th:value="${date}" />
-            <button type="submit">Delete</button>
+            <button class="btn btn-danger" type="submit" >Delete</button>
         </form>
     </td>
 </tr>

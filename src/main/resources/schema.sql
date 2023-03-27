@@ -23,8 +23,6 @@ create sequence if not exists racun_seq start 4 increment 1;
 -- insert into racun values(2,'DE3232366551',1,'EUR',2,to_date('15.6.2001','dd.mm.yyyy'),NULL) ON CONFLICT DO NOTHING;
 -- insert into racun values(3,'HR2134666632',2,'EUR',1,to_date('17.3.2020','dd.mm.yyyy'),NULL) ON CONFLICT DO NOTHING;
 
-
-
 insert into racun values(1,'HR3455345442',1,'HRK',1,to_date('21.12.2012','dd.mm.yyyy'),to_date('16.3.2020','dd.mm.yyyy')) ON CONFLICT DO NOTHING;
 insert into racun values(2,'DE3232366551',1,'EUR',2,to_date('15.6.2001','dd.mm.yyyy'),NULL) ON CONFLICT DO NOTHING;
 insert into racun values(3,'HR2134666632',2,'EUR',1,to_date('17.3.2020','dd.mm.yyyy'),NULL) ON CONFLICT DO NOTHING;

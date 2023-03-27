@@ -4,116 +4,120 @@
     <title>Page Title</title>
 
     <script>
-        let date = "[[${date}]]";
+        let dateGlobal = "[[${date}]]";
 
-        function deleteRacun(button) {
-            console.log("DELTE");
-            var racunId = button.getAttribute("data-racun-id");
-            console.log(racunId);
-            fetch("/racun/delete/" + racunId, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Error deleting Racun");
-                }
-                // Remove the deleted item from the list
-                button.closest("tr").remove();
-            })
-                .catch(error => {
-                    console.log("Error deleting Racun: " + error.message);
-            });
-        }
-        
-        function addRacun() {
+        function updateRacun(rowId) {
+            const row = document.getElementById(rowId);
             const racun = {
-                iban: document.getElementById("iban").value,
-                tipRacuna: document.getElementById("tipRacuna").value,
-                valuta: document.getElementById("valuta").value,
-                klijentId: document.getElementById("klijentId").value,
-                datumOtvaranja: document.getElementById("datumOtvaranja").value,
-                datumZatvaranja: document.getElementById("datumZatvaranja").value
+                racunId: row.cells[0].textContent,
+                iban: row.cells[1].textContent,
+                tipRacuna: row.cells[2].textContent,
+                valuta: row.cells[3].textContent,
+                klijentId: row.cells[4].textContent,
+                datumOtvaranja: row.cells[5].textContent,
+                datumZatvaranja: row.cells[6].textContent
             };
-            console.log(racun.datumOtvaranja);
-            console.log(racun);
 
-            fetch('/racun/add', {
+            const url = `/racun/update?date=${dateGlobal}`;
+            const stringifiedRacun = JSON.stringify(racun);
+
+            const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(racun)
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Clone the row fragment
-                console.log(object);
-                const rowTemplate = document.createElement('template');
-                rowTemplate.innerHTML = `<th:block th:insert="fragments :: racunRow(racun=${data})"></th:block>`;
-                const row = rowTemplate.content.firstChild;
+                body: stringifiedRacun,
+            };
 
-                // Append the new row to the table if it satisfies the query
-                if (data.datumZatvaranja == null && data.datumOtvaranja <= date || data.datumOtvaranja <= date && data.datumZatvaranja >= date) {
-                    document.querySelector('tbody').appendChild(row);
-                }
-            })
-            .catch(error => console.error(error));
+            return fetch(url, requestOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error updating racun');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    window.location.href = "/?date=" + dateGlobal;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
+
+
     </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
 </head>
-<body>
 
-    
-
+<body class="d-flex flex-column mx-auto size gap-3">
     <h1>Racuni</h1>
-    <form th:action="@{/}" method="post">
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" th:value="${date}">
-        <button type="submit">Prikaži</button>
-    </form>
-    <br>
+    <div class="mb-3">
+        <form th:action="@{/}" th:method="GET">
+            <label for="inputDate" class="form-label">Date</label>
+            <input class="form-control" type="date" id="date" name="date" th:value="${date}">
+            <div id="dateInputHelp" class="form-text">Choose a date for which you want to display data.</div>
 
-    <form th:onsubmit="addRacun(); return false;" method="post" id="newRacunForm">
-        <label for="iban">IBAN:</label>
-        <input type="text" id="iban"required pattern="[A-Za-z]{2}[0-9]+" />
-        <br>
-    
-        <label for="tipRacuna">Tip racuna:</label>
-        <input type="text" id="tipRacuna"/>
-        <br>
-    
-        <label for="valuta">Valuta:</label>
-        <input type="text" id="valuta" required pattern="[A-Za-z]{3}" />
-        <br>
-    
-        <label for="klijentId">Klijent ID:</label>
-        <input type="text" id="klijentId"/>
-        <br>
-    
-        <label for="datumOtvaranja">Datum otvaranja:</label>
-        <input type="date" id="datumOtvaranja" required />
-        <br>
-    
-        <label for="datumZatvaranja">Datum zatvaranja:</label>
-        <input type="date" id="datumZatvaranja"/>
-        <br>
-    
-        <button type="submit">Create</button>
-    </form>
-      <br>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
 
-    <table>
+    </div>
+    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Insert racun</a>
+    <div class="collapse" id="collapseInsertRacun">
+        <form th:action="@{/racun/add}" method="post" id="newRacunForm" th:object="${newRacun}" enctype="application/json">
+            <div class="mb-3">
+                <label class="form-label" for="iban">IBAN</label>
+                <input class="form-control" type="text" id="iban" required pattern="[A-Za-z]{2}[0-9]+" th:field="*{iban}" />
+                <div class="form-text" id="ibanHelp">Insert the IBAN, the first two values have to be letters (e.g. HRxxxx)</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label" for="tipRacuna">Tip racuna</label>
+                <input class="form-control" type="text" id="tipRacuna" th:field="*{tipRacuna}" />
+                <div class="form-text" id="tipRacunaHelp">Insert the type of the account</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label" for="valuta">Valuta</label>
+                <input class="form-control" type="text" id="valuta" required pattern="[A-Za-z]{3}" th:field="*{valuta}" />
+                <div class="form-text" id="valutaHelp">Insert the currency of the account, using three letters (e.g. USD)</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label" for="klijentId">Klijent ID</label>
+                <input class="form-control" type="text" id="klijentId" th:field="*{klijentId}" />
+                <div class="form-text" id="klijentIdHelp">Insert the ID of the client associated with this account</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label" for="datumOtvaranja">Datum otvaranja</label>
+                <input class="form-control" type="date" id="datumOtvaranja" required th:field="*{datumOtvaranja}" />
+                <div class="form-text" id="datumOtvaranjaHelp">Insert the opening date of the account</div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label" for="datumZatvaranja">Datum zatvaranja</label>
+                <input class="form-control" type="date" id="datumZatvaranja" th:field="*{datumZatvaranja}" />
+                <div class="form-text" id="datumZatvaranjaHelp">Insert the closing date of the account (if applicable)</div>
+              </div>
+              
+
+            <input type="hidden" name="date" th:value="${date}" />
+    
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+    <div>
+
+    <table class="table table-striped">
         <thead>
             <tr>
-                <tr>Id</tr>
-                <tr>IBAN</tr>
-                <tr>Tip Racuna</tr>
-                <tr>Valuta</tr>
-                <tr>Klijent Id</tr> 
-                <tr>Datum otvaranja</tr>
-                <tr>Datum zatvaranja</tr>
-                <tr>Actions</tr>
+                <tr scope="col">Id</tr>
+                <tr scope="col">IBAN</tr>
+                <tr scope="col">Tip Racuna</tr>
+                <tr scope="col">Valuta</tr>
+                <tr scope="col">Klijent Id</tr> 
+                <tr scope="col">Datum otvaranja</tr>
+                <tr scope="col">Datum zatvaranja</tr>
+                <tr scope="col">Actions</tr>
             </tr>
         </thead>
         <tbody>
@@ -123,7 +127,17 @@
             </th:block>
         </tbody>
 
-    </table>    
-
+    </table>   
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
 </body>
+
 </html> 
+
+<style>
+    .size {
+        width: 35%;
+        background-color: rgb(238, 238, 238);
+    }
+    
+</style>
