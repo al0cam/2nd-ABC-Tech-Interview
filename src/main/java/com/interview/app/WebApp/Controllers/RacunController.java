@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,16 +41,9 @@ public class RacunController {
 		if(date == null)
 			date = LocalDate.now();
 		List<Racun> racuni = racunService.findByDate(date);
+		Racun newRacun = new Racun();
 		model.addAttribute("date", date);
-		model.addAttribute("racuni", racuni);
-		return "Table";
-	}
-	
-	@PostMapping("/")
-	public String getAllRacunForDate(@ModelAttribute("date") LocalDate date, Model model) {
-		if(date == null)
-			date = LocalDate.now();
-		List<Racun> racuni = racunService.findByDate(date);
+		model.addAttribute("newRacun", newRacun);
 		model.addAttribute("racuni", racuni);
 		return "Table";
 	}
@@ -59,31 +54,38 @@ public class RacunController {
 	}
 
 	@PostMapping("/racun/add")
-	public ResponseEntity<Racun> addRacun(@RequestBody Racun racun) {
-		System.out.println("DATUM: "+racun.getDatumOtvaranja());
-		System.out.println("DATUMZa: "+racun.getDatumZatvaranja());
+	public String addRacun(
+		@RequestParam(name="date", required=false) LocalDate date, 
+		@ModelAttribute Racun racun) 
+	{
 		if(racunService.addRacun(racun) != null)
-			return ResponseEntity.ok(racun);	
-		else
-			return ResponseEntity.badRequest().build();
+			return "redirect:/?date="+date;
+		return null;
 	}
 
-	// Update does the same thing as add which could be troublesome.
-	@PutMapping("/racun/update")
-	public Racun updateRacun(@RequestBody Racun racun) {
-		return racunService.updateRacun(racun);
+	// No kind of mapping except post or get works
+	@PostMapping("/racun/update")
+	public String updateRacun(
+		@RequestParam(name="date", required=false)
+		LocalDate date, 
+		@RequestBody Racun racun) 
+	{
+		if(racunService.updateRacun(racun) != null)
+		{
+			return "redirect:/?date="+date;
+		}
+		return null;
 	}
 
+	// Delete mapping doesnt work for some reason.
 	@PostMapping("/racun/delete/{id}")
 	public String deleteRacun(
 		@PathVariable("id") Long id, 
-		@ModelAttribute("date") LocalDate date, 
-		RedirectAttributes redirectAttributes) 
+		@ModelAttribute("date") LocalDate date) 
 	{
 		System.out.println("date: "+date);
 		racunService.deleteRacun(id);
-		redirectAttributes.addFlashAttribute("date", date);
-		return "redirect:/";
+		return "redirect:/?date="+date;
 	}
 
 }
