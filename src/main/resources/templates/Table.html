@@ -41,94 +41,113 @@
                     console.error(error);
                 });
         }
-
-
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
 </head>
 
 <body class="d-flex flex-column mx-auto size gap-3">
-    <h1>Racuni</h1>
+    <h1 class="mainTitle">Računi</h1>
+
     <div class="mb-3">
+        <h2 class="title">
+            Datum
+        </h2>
+
         <form th:action="@{/}" th:method="GET">
-            <label for="inputDate" class="form-label">Date</label>
             <input class="form-control" type="date" id="date" name="date" th:value="${date}">
-            <div id="dateInputHelp" class="form-text">Choose a date for which you want to display data.</div>
+            <div id="dateInputHelp" class="form-text">Izaberite datum za koji želite prikazane podatke o računima</div>
 
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-primary" type="submit">Podnesi</button>
         </form>
-
     </div>
-    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Insert racun</a>
-    <div class="collapse" id="collapseInsertRacun">
-        <form th:action="@{/racun/add}" method="post" id="newRacunForm" th:object="${newRacun}" enctype="application/json">
-            <div class="mb-3">
-                <label class="form-label" for="iban">IBAN</label>
-                <input class="form-control" type="text" id="iban" required pattern="[A-Za-z]{2}[0-9]+" th:field="*{iban}" />
-                <div class="form-text" id="ibanHelp">Insert the IBAN, the first two values have to be letters (e.g. HRxxxx)</div>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label" for="tipRacuna">Tip racuna</label>
-                <input class="form-control" type="text" id="tipRacuna" th:field="*{tipRacuna}" />
-                <div class="form-text" id="tipRacunaHelp">Insert the type of the account</div>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label" for="valuta">Valuta</label>
-                <input class="form-control" type="text" id="valuta" required pattern="[A-Za-z]{3}" th:field="*{valuta}" />
-                <div class="form-text" id="valutaHelp">Insert the currency of the account, using three letters (e.g. USD)</div>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label" for="klijentId">Klijent ID</label>
-                <input class="form-control" type="text" id="klijentId" th:field="*{klijentId}" />
-                <div class="form-text" id="klijentIdHelp">Insert the ID of the client associated with this account</div>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label" for="datumOtvaranja">Datum otvaranja</label>
-                <input class="form-control" type="date" id="datumOtvaranja" required th:field="*{datumOtvaranja}" />
-                <div class="form-text" id="datumOtvaranjaHelp">Insert the opening date of the account</div>
-              </div>
-              
-              <div class="mb-3">
-                <label class="form-label" for="datumZatvaranja">Datum zatvaranja</label>
-                <input class="form-control" type="date" id="datumZatvaranja" th:field="*{datumZatvaranja}" />
-                <div class="form-text" id="datumZatvaranjaHelp">Insert the closing date of the account (if applicable)</div>
-              </div>
-              
 
-            <input type="hidden" name="date" th:value="${date}" />
+    <div class="mb-3">
+        <div class="title" data-bs-toggle="collapse" data-bs-target="#collapseInsertRacun" aria-expanded="false" aria-controls="collapseInsertRacun">
+            <h2>
+                Unesite novi račun
+            </h2>
+            <div class="form-text" id="insertRacunTitleHelp">Pritisnite tekst za prikaz forme za unos</div>
+        </div>
+        
     
-            <button type="submit" class="btn btn-primary">Create</button>
-        </form>
+        <div class="collapse mt-3" id="collapseInsertRacun">
+            <form th:action="@{/racun/add}" method="post" id="newRacunForm" th:object="${newRacun}" enctype="application/json">
+                <div class="mb-3">
+                    <label class="form-label" for="iban">IBAN</label>
+                    <input class="form-control" type="text" id="iban" required pattern="[A-Za-z]{2}[0-9]+" th:field="*{iban}" />
+                    <div class="form-text" id="ibanHelp">Unesite IBAN, prve dvije vrijednosti moraju biti slova (npr. HRxxxx)</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="tipRacuna">Tip računa</label>
+                    <input class="form-control" type="text" id="tipRacuna" th:field="*{tipRacuna}" />
+                    <div class="form-text" id="tipRacunaHelp">Unesite tip računa</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="valuta">Valuta</label>
+                    <input class="form-control" type="text" id="valuta" required pattern="[A-Za-z]{3}" th:field="*{valuta}" />
+                    <div class="form-text" id="valutaHelp">Unesite valutu računa koriteći tri slova (npr. USD)</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="klijentId">Klijent ID</label>
+                    <input class="form-control" type="text" id="klijentId" th:field="*{klijentId}" />
+                    <div class="form-text" id="klijentIdHelp">Unesite ID klijenta koji je povezan s računom</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="datumOtvaranja">Datum otvaranja</label>
+                    <input class="form-control" type="date" id="datumOtvaranja" required th:field="*{datumOtvaranja}" />
+                    <div class="form-text" id="datumOtvaranjaHelp">Unesite datum otvaranja računa.</div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label" for="datumZatvaranja">Datum zatvaranja</label>
+                    <input class="form-control" type="date" id="datumZatvaranja" th:field="*{datumZatvaranja}" />
+                    <div class="form-text" id="datumZatvaranjaHelp">Unesite datum zatvaranja računa (ako postoji)</div>
+                </div>
+                
+                
+                <input type="hidden" name="date" th:value="${date}" />
+                
+                <button type="submit" class="btn btn-primary">Podnesi</button>
+            </form>
+        </div>
     </div>
+    
+    
     <div>
+        <div class="title">
+            <h2>
+                Tablica računa
+            </h2>
+        </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <tr scope="col">Id</tr>
-                <tr scope="col">IBAN</tr>
-                <tr scope="col">Tip Racuna</tr>
-                <tr scope="col">Valuta</tr>
-                <tr scope="col">Klijent Id</tr> 
-                <tr scope="col">Datum otvaranja</tr>
-                <tr scope="col">Datum zatvaranja</tr>
-                <tr scope="col">Actions</tr>
-            </tr>
-        </thead>
-        <tbody>
-            <th:block th:each="racun : ${racuni}">
-                <th:block th:insert="~{fragments :: racunRow(racun=${racun})}">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">IBAN</th>
+                    <th scope="col">Tip Racuna</th>
+                    <th scope="col">Valuta</th>
+                    <th scope="col">Klijent Id</th> 
+                    <th scope="col">Datum otvaranja</th>
+                    <th scope="col">Datum zatvaranja</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each="racun : ${racuni}">
+                    <th:block th:insert="~{fragments :: racunRow(racun=${racun})}">
+                    </th:block>
                 </th:block>
-            </th:block>
-        </tbody>
+            </tbody>
 
-    </table>   
+        </table>   
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
 </body>
 
@@ -138,6 +157,15 @@
     .size {
         width: 35%;
         background-color: rgb(238, 238, 238);
+    }
+    .title
+    {
+        border-bottom: 0.5rem solid rgb(201, 201, 201);
+    }
+
+    .mainTitle
+    {
+        border-bottom: 0.7rem solid rgb(161, 161, 161);
     }
     
 </style>

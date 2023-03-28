@@ -8,11 +8,11 @@
     <td contenteditable="true" th:if="${racun.datumZatvaranja} != null" th:text="${racun.datumZatvaranja}"></td>
     <td contenteditable="true" th:if="${racun.datumZatvaranja} == null" th:text="zauvijek"></td>
     <td class="d-flex gap-2">
-        <button class="btn btn-secondary" th:onclick="updateRacun(/*[[${racun.racunId}]]*/)" >Update</button>
+        <button class="btn btn-secondary" th:onclick="updateRacun(/*[[${racun.racunId}]]*/)" >Ažuriraj</button>
 
         <form th:action="@{/racun/delete/{id}(id=${racun.racunId})}" th:method="POST">
             <input type="hidden" name="date" th:value="${date}" />
-            <button class="btn btn-danger" type="submit" >Delete</button>
+            <button class="btn btn-danger" type="submit" >Obriši</button>
         </form>
     </td>
 </tr>
