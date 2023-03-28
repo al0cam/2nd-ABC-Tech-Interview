@@ -6,6 +6,7 @@
     <script>
         let dateGlobal = "[[${date}]]";
 
+        // Update racun calls the update endpoint and reloads the page with the new data
         function updateRacun(rowId) {
             const row = document.getElementById(rowId);
             const racun = {
@@ -155,7 +156,7 @@
 
 <style>
     .size {
-        width: 35%;
+        width: 40%;
         background-color: rgb(238, 238, 238);
     }
     .title
